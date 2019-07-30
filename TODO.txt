@@ -1,0 +1,8 @@
+
+-User Accounts
+-Styling
+-Authentication
+-Deployment
+-Live User Interactions: Player vs Player (players can affect eachothers health bar)
+-App Features -: TOP DOWN, Sprites, Obstacles, PVP
+-Presentation
