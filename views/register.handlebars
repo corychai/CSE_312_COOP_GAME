@@ -1,0 +1,15 @@
+<h1>Register:</h1>
+<form action="/registered" method="POST">
+    <label for="username">
+        Username:<br>
+        <input type="text" name="username">
+        <div style="color: red;">{{error}}</div>
+    </label>
+    <br><br>
+    <label for="password">
+        Password:<br>
+        <input type="password" name="password">
+    </label>
+    <br><br>
+    <input type="submit" value="Submit">
+</form>
