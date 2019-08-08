@@ -17,9 +17,9 @@ const app = express();
 const port = 3000;
 
 const con = mysql.createConnection({
-    host: "localhost",
-    user: "cse312",
-    password: "cse312"
+    host: "https://cse312-final-project.herokuapp.com/",
+    user: "bc2d0e15f15a1e",
+    password: "5bbf374f"
 });
 
 //TODO: Remove testing statements
@@ -39,7 +39,6 @@ con.query(sql, function (err, result) {
             id INT AUTO_INCREMENT PRIMARY KEY,
             username VARCHAR(255),
             password VARCHAR(255),
-            screenName VARCHAR(255),
             kills INT,
             deaths INT
         )`;
