@@ -113,6 +113,6 @@ app.post('/registered', function(req, res) {
 app.use(function(req, res, next) {
     res.status(404).render('error404');
 });
-// app.listen(port, function() {
-//     console.log(`App listening on port ${port}`);
-// });
+app.listen(port, function() {
+    console.log(`App listening on port ${port}`);
+});
