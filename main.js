@@ -17,7 +17,7 @@ const app = express();
 const port = 3000;
 
 const con = mysql.createConnection({
-    host: "https://cse312-final-project.herokuapp.com/",
+    host: "mysql://bc2d0e15f15a1e:5bbf374f@us-cdbr-iron-east-02.cleardb.net/heroku_1f1a7609e5b34e7?reconnect=true",
     user: "bc2d0e15f15a1e",
     password: "5bbf374f"
 });
