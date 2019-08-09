@@ -1,5 +1,8 @@
 const express = require('express');
 const exphbs = require('express-handlebars');
+const app = express();
+const port = 3000;
+
 const bodyParser = require('body-parser');
 
 const mysql = require('mysql');
@@ -13,44 +16,39 @@ MySQL Node.js Tutorials:
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
-const app = express();
-const port = 3000;
+const config = require('./config');
+const con = mysql.createConnection(config.dbConn);
 
-const con = mysql.createConnection({
-    host: "mysql://bc2d0e15f15a1e:5bbf374f@us-cdbr-iron-east-02.cleardb.net/heroku_1f1a7609e5b34e7?reconnect=true",
-    user: "bc2d0e15f15a1e",
-    password: "5bbf374f"
-});
+//TODO: Remove Test Statements
 
-//TODO: Remove testing statements
-sql = "CREATE DATABASE IF NOT EXISTS cse312";
-con.query(sql, function (err, result) {
+
+sql = 'USE ' + config.dbConn.database;
+con.query(sql, function (err) {
     if (err) throw err;
-    console.log("   Database created");
-    sql = 'USE cse312'
-    con.query(sql, function (err) {
+    //TODO: --Test Statement START--
+    sql = "DROP TABLE IF EXISTS users";
+    con.query(sql, function (err, result) {
         if (err) throw err;
-        sql = "DROP TABLE IF EXISTS users";
-        con.query(sql, function (err, result) {
-            if (err) throw err;
-            console.log("   Table reset");
-        });
-        sql = `CREATE TABLE IF NOT EXISTS users (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            username VARCHAR(255),
-            password VARCHAR(255),
-            kills INT,
-            deaths INT
-        )`;
-        con.query(sql, function (err, result) {
-            if (err) throw err;
-            console.log("   Table created");
-        });
-        con.query("SELECT * FROM users", function (err, result, fields) {
-            if (err) throw err;
-            console.log(result);
-        });
+        console.log("   Table reset");
     });
+    //TODO: --Test Statement END--
+    sql = `CREATE TABLE IF NOT EXISTS users (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        username VARCHAR(255),
+        password VARCHAR(255),
+        kills INT,
+        deaths INT
+    )`;
+    con.query(sql, function (err, result) {
+        if (err) throw err;
+        console.log("   Table created");
+    });
+    //TODO: --Test Statement START--
+    con.query("SELECT * FROM users", function (err, result, fields) {
+        if (err) throw err;
+        console.log(result);
+    });
+    //TODO: --Test Statement END--
 });
 
 app.use(express.static(__dirname + '/public'));
@@ -62,10 +60,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 
 app.get('/', function(req, res) {
+    //TODO: --Test Statement START--
     con.query("SELECT * FROM users", function (err, result, fields) {
         if (err) throw err;
         console.log(result);
     });
+    //TODO: --Test Statement END--
     res.render('signIn');
 });
 app.get('/register', function(req, res) {
