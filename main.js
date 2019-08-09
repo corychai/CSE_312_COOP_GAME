@@ -1,7 +1,7 @@
 const express = require('express');
 const exphbs = require('express-handlebars');
 const app = express();
-const port = 8080;
+const port = 3306;
 
 const bodyParser = require('body-parser');
 
