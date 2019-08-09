@@ -1,7 +1,7 @@
 const express = require('express');
 const exphbs = require('express-handlebars');
 const app = express();
-const port = 3306;
+const port = 3000;
 
 const bodyParser = require('body-parser');
 
@@ -113,6 +113,6 @@ app.post('/registered', function(req, res) {
 app.use(function(req, res, next) {
     res.status(404).render('error404');
 });
-app.listen(port, function() {
-    console.log(`App listening on port ${port}`);
+app.listen(process.env.PORT || port, function() {
+    console.log(`App ready...`);
 });
