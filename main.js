@@ -78,7 +78,7 @@ app.post('/signedIn', function(req, res) {
         if (err) throw err;
         if(result.length > 0) {
             if(bcrypt.compareSync(req.body.password, result[0].password)) {
-                res.render('index', {"username": req.body.username});
+                res.render('index', {"username": result[0].username, "kills": result[0].kills, "deaths": result[0].deaths});
             }
             else {
                 res.render('signIn', {"error": "ERROR: Username/Password combination does not exist"});
@@ -99,22 +99,20 @@ app.post('/registered', function(req, res) {
         }
         else {
             const hashPass = bcrypt.hashSync(req.body.password, saltRounds);
-            sql = "INSERT INTO users (username, password) VALUES (?,?)";
-            value = [req.body.username, hashPass];
-            con.query(sql, value, function (err, result) {
+            sql = "INSERT INTO users (username, password, kills, deaths) VALUES (?,?,?,?)";
+            values = [req.body.username, hashPass, 0, 0];
+            con.query(sql, values, function (err, result) {
                 if (err) throw err;
                 console.log("   1 record inserted, ID: " + result.insertId);
             });
-            res.render('index', {"username": req.body.username});
+            res.render('index', {"username": req.body.username, "kills": 0, "deaths": 0});
         }
     });
 });
 
-
-
 app.use(function(req, res, next) {
     res.status(404).render('error404');
 });
-app.listen(port, function() {
-    console.log(`App listening on port ${port}`);
-});
+// app.listen(port, function() {
+//     console.log(`App listening on port ${port}`);
+// });
