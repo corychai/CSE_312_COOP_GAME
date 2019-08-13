@@ -24,9 +24,8 @@ MySQL Node.js Tutorials:
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
-const config = require('./config');
+const config = require('./public/js/config').default;
 const con = mysql.createConnection(config.dbConn);
-const phaser = config.phaser;
 
 //TODO: Remove Test Statements
 
@@ -39,7 +38,7 @@ con.query(sql, function (err) {
     sql = "DROP TABLE IF EXISTS users";
     con.query(sql, function (err, result) {
         if (err) throw err;
-        console.log("   Table reset");
+        console.log("Table reset");
     });
     //TODO: --Test Statement END--
     sql = `CREATE TABLE IF NOT EXISTS users (
@@ -51,7 +50,7 @@ con.query(sql, function (err) {
     )`;
     con.query(sql, function (err, result) {
         if (err) throw err;
-        console.log("   Table created");
+        console.log("Table created");
     });
     //TODO: --Test Statement START--
     con.query("SELECT * FROM users", function (err, result, fields) {
@@ -105,7 +104,7 @@ app.post('/registered', function(req, res) {
             values = [req.body.username, hashPass, 0, 0];
             con.query(sql, values, function (err, result) {
                 if (err) throw err;
-                console.log("   1 record inserted, ID: " + result.insertId);
+                console.log("1 record inserted, ID: " + result.insertId);
             });
             res.render('index', {"username": req.body.username, "kills": 0, "deaths": 0});
         }
@@ -181,6 +180,6 @@ io.on('connection', function(socket) {
 app.use(function(req, res, next) {
     res.status(404).render('error404');
 });
-app.listen(process.env.PORT || port, function() {
+server.listen(process.env.PORT || port, function() {
     console.log(`App ready...`);
 });

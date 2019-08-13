@@ -1,8 +1,10 @@
+import { phaser as _phaser } from './public/js/config';
+
 var phaser = {
   type: Phaser.AUTO,
-  parent: 'phaser-example',
-  width: 800,
-  height: 600,
+  parent: 'display',
+  width: _phaser.width,
+  height: _phaser.height,
   physics: {
     default: 'arcade',
     arcade: {
