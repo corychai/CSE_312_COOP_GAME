@@ -8,8 +8,8 @@ config.dbConn = {
 };
 
 config.phaser = {
-  width: 500,
-  height: 300
+  width: 600,
+  height: 500
 };
 
-export default config;
+module.exports = config;

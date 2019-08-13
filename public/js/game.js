@@ -1,10 +1,11 @@
-import { phaser as _phaser } from './public/js/config';
+var gameWidth = 600;
+var gameHeight = 500;
 
 var phaser = {
   type: Phaser.AUTO,
   parent: 'display',
-  width: _phaser.width,
-  height: _phaser.height,
+  width: gameWidth,
+  height: gameHeight,
   physics: {
     default: 'arcade',
     arcade: {
@@ -61,13 +62,10 @@ function create() {
       }
     });
   });
-
-  this.blueScoreText = this.add.text(16, 16, '', { fontSize: '32px', fill: '#0000FF' });
-  this.redScoreText = this.add.text(584, 16, '', { fontSize: '32px', fill: '#FF0000' });
     
   this.socket.on('scoreUpdate', function(scores) {
-    self.blueScoreText.setText('Blue: ' + scores.blue);
-    self.redScoreText.setText('Red: ' + scores.red);
+    // self.blueScoreText.setText('Blue: ' + scores.blue);
+    // self.redScoreText.setText('Red: ' + scores.red);
   });
 
   this.socket.on('starLocation', function(starLocation) {
