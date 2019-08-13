@@ -1,4 +1,4 @@
-#app_container {
+/* #app_container {
     height: 600px;
     display: grid;
     grid-gap: 10px;
@@ -19,4 +19,4 @@
 }
 #player_info {
     grid-column: 1 / span 2;
-}
+} */
