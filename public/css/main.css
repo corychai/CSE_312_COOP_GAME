@@ -1,0 +1,22 @@
+#app_container {
+    height: 600px;
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: auto auto auto;
+    grid-template-rows: 33% 33% 33%;
+    background-color: #2196F3;
+}
+#app_container > div {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px 0;
+}
+#display {
+    grid-column: 1 / span 2;
+    grid-row: 1 / span 2;
+}
+#server_info {
+    grid-row: 1 / span 3;
+}
+#player_info {
+    grid-column: 1 / span 2;
+}
