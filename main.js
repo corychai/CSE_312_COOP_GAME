@@ -35,7 +35,7 @@ con.query(sql, function (err) {
     sql = `CREATE TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY,
         username VARBINARY(255),
-        password VARBINARY(255),
+        password VARCHAR(255),
         kills INT,
         deaths INT
     )`;
