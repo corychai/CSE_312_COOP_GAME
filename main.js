@@ -27,6 +27,8 @@ const saltRounds = 10;
 const config = require('./config');
 const con = mysql.createConnection(config.dbConn);
 
+var user = "";
+
 //TODO: Remove Test Statements
 
 //   ------ Authentication ------   //
@@ -75,6 +77,7 @@ app.get('/register', function(req, res) {
 app.post('/signedIn', function(req, res) {
     sql = "SELECT * FROM users WHERE username = ?"
     let value = req.body.username;
+    user = value;
     con.query(sql, value, function (err, result) {
         if (err) throw err;
         if(result.length > 0) {
@@ -93,6 +96,7 @@ app.post('/signedIn', function(req, res) {
 app.post('/registered', function(req, res) {
     sql = "SELECT * FROM users WHERE username = ?"
     let value = req.body.username;
+    user = value;
     con.query(sql, value, function (err, result) {
         if (err) throw err;
         if(result.length > 0) {
@@ -134,7 +138,8 @@ io.on('connection', function(socket) {
       x: Math.floor(Math.random() * config.phaser.width) + 50,
       y: Math.floor(Math.random() * config.phaser.height) + 50,
       playerId: socket.id,
-      team: (Math.floor(Math.random() * 2) == 0) ? 'red' : 'blue'
+      team: (Math.floor(Math.random() * 2) == 0) ? 'red' : 'blue',
+      username: user
     };
     // send the players object to the new player
     socket.emit('currentPlayers', players);
@@ -144,7 +149,7 @@ io.on('connection', function(socket) {
     // send the current scores
     socket.emit('scoreUpdate', scores);
     // update all other players of the new player
-    socket.broadcast.emit('newPlayer', players[socket.id]);
+    socket.broadcast.emit('newPlayer', [players, players[socket.id]]);
   
     // when a player disconnects, remove them from our players object
     socket.on('disconnect', function() {
@@ -152,7 +157,7 @@ io.on('connection', function(socket) {
       // remove this player from our players object
       delete players[socket.id];
       // emit a message to all players to remove this player
-      io.emit('disconnect', socket.id);
+      io.emit('disconnect', [players, socket.id]);
     });
   
     // when a player moves, update the player data

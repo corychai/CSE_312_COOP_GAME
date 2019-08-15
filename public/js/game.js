@@ -27,6 +27,19 @@ function preload() {
   this.load.image('star', 'assets/star_gold.png');
 }
 
+function stringifyOnline(online) {
+  var temp = [];
+  var keys = Object.keys(online);
+  keys.forEach(function(key){
+      temp.push(online[key]);
+  });
+  let retVal = "";
+  temp.forEach(function(player) {
+    retVal += player.username + "<br>";
+  });
+  return retVal;
+}
+
 function create() {
   var self = this;
   this.socket = io();
@@ -35,24 +48,28 @@ function create() {
     Object.keys(players).forEach(function(id) {
       if (players[id].playerId === self.socket.id) {
         addPlayer(self, players[id]);
+        document.getElementById("online").innerHTML = stringifyOnline(players);
       }
       else {
         addOtherPlayers(self, players[id]);
+        document.getElementById("online").innerHTML = stringifyOnline(players);
       }
     });
   });
-  this.socket.on('newPlayer', function(playerInfo) {
-    addOtherPlayers(self, playerInfo);
+  this.socket.on('newPlayer', function(data) {
+    addOtherPlayers(self, data[1]);
+    document.getElementById("online").innerHTML = stringifyOnline(data[0]);
   });
-
-  this.socket.on('disconnect', function(playerId) {
+  
+  this.socket.on('disconnect', function(data) {
     self.otherPlayers.getChildren().forEach(function(otherPlayer) {
-      if (playerId === otherPlayer.playerId) {
+      if (data[1] === otherPlayer.playerId) {
         otherPlayer.destroy();
       }
     });
+    document.getElementById("online").innerHTML = stringifyOnline(data[0]);
   });
-
+  
   this.cursors = this.input.keyboard.createCursorKeys();
   this.socket.on('playerMoved', function(playerInfo) {
     self.otherPlayers.getChildren().forEach(function (otherPlayer) {
@@ -61,11 +78,6 @@ function create() {
         otherPlayer.setPosition(playerInfo.x, playerInfo.y);
       }
     });
-  });
-    
-  this.socket.on('scoreUpdate', function(scores) {
-    // self.blueScoreText.setText('Blue: ' + scores.blue);
-    // self.redScoreText.setText('Red: ' + scores.red);
   });
 
   this.socket.on('starLocation', function(starLocation) {
