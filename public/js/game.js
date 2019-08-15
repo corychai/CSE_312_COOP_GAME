@@ -115,6 +115,7 @@ function create() {
     if(id == self.socket.id){
       //If this is you
       self.ship.alpha = 0;
+      self.ship.destroy();
       // self.socket.emit('playerMovement', { x: self.ship.x, y: self.ship.y, rotation: self.ship.rotation });
     }
     else {
