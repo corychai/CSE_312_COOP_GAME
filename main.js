@@ -129,8 +129,8 @@ io.on('connection', function(socket) {
     // create a new player and add it to our players object
     players[socket.id] = {
         rotation: 0,
-        x: Math.floor(Math.random() * config.phaser.width) + 50,
-        y: Math.floor(Math.random() * config.phaser.height) + 50,
+        x: Math.floor(Math.random() * config.phaser.width),
+        y: Math.floor(Math.random() * config.phaser.height),
         playerId: socket.id,
         shot: false,
         color: (Math.random() * 0xffffff),
@@ -237,14 +237,13 @@ function update() {
                     // y: Math.floor(Math.random() * 500) + 50,
                     // io.emit('disconnect',id);
                     io.emit('player-hit',id); // Tell everyone this player got hit
-                    players[id].x =  Math.floor(Math.random() * config.phaser.width) + 50;
-                    players[id].y = Math.floor(Math.random() * config.phaser.height) + 50;
+                    players[id].x =  Math.floor(Math.random() * config.phaser.width);
+                    players[id].y = Math.floor(Math.random() * config.phaser.height);
                     // io.broadcast.emit('playerMoved', players[id]);
                     io.emit('playerMoved', players[id]);
                     io.emit('currentPlayers', players);
                     // socket.emit('currentPlayers', players);
                     // io.broadcast.emit('newPlayer', players[socket.id]);
-                    console.log('player team is: ' + players[id].team);
                     updateKD(players[bullet.owner_id].username, players[id].username);
                 }
             }
