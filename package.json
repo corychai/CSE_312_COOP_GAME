@@ -1,0 +1,29 @@
+{
+  "name": "cse312-final",
+  "version": "1.0.0",
+  "description": "A player vs. player game for CSE 312 Final Project",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/corychai/CSE_312_COOP_GAME.git"
+  },
+  "author": "Cory Chaise, Nicholas Shaffer",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/corychai/CSE_312_COOP_GAME/issues"
+  },
+  "homepage": "https://github.com/corychai/CSE_312_COOP_GAME#readme",
+  "dependencies": {
+    "bcrypt": "^3.0.6",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "express-handlebars": "^3.1.0",
+    "mysql": "^2.17.1",
+    "phaser": "^3.19.0",
+    "socket.io": "^2.2.0",
+    "socket.io-client": "^2.2.0"
+  }
+}

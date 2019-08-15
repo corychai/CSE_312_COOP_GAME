@@ -1,0 +1,16 @@
+<div id="app_container">
+    <div id="display">
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="js/game.js"></script>
+    </div>
+    <div id="server_info">
+        {{username}}<br><br><br>
+        Players on server:
+        <hr>
+        <div id="online"></div>
+    </div>
+    <div id="player_info">
+        Kills: {{kills}}<br>
+        Deaths: {{deaths}}
+    </div>
+</div>
