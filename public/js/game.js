@@ -129,15 +129,15 @@ function create() {
     }
   });
 
-  this.socket.on('update_players_shot', function(players,bullet_id) {
+  this.socket.on('update_players_shot', function(players,bullet_id,victim_id) {
     Object.keys(players).forEach(function(id) {
       if(players[id].playerId === self.socket.id) {
-        if(self.socket.id !== bullet_id) {
-          addPlayer(self, players[id]);
+        if(self.socket.id === victim_id) {
+          addPlayer(self, players[victim_id]);
         }
       }
       else {
-        addOtherPlayers(self, players[id]);
+        //addOtherPlayers(self, players[id]);
       }
     });
   });

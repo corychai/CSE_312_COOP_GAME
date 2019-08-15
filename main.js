@@ -274,10 +274,11 @@ function update() {
                     io.emit('player-hit',id); // Tell everyone this player got hit
                     players[id].x =  Math.floor(Math.random() * config.phaser.width);
                     players[id].y = Math.floor(Math.random() * config.phaser.height);
+                    io.emit('update_players_shot', players,bullet.owner_id,id);
+
                     // io.broadcast.emit('playerMoved', players[id]);
                     io.emit('playerMoved', players[id]);
                     // io.emit('currentPlayers', players);
-                    // io.emit('update_players_shot', players,bullet.owner_id);
 
                     // socket.emit('currentPlayers', players);
                     // io.broadcast.emit('newPlayer', players[socket.id]);
