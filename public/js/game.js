@@ -24,7 +24,7 @@ var game = new Phaser.Game(phaser);
 function preload() {
   this.load.image('ship', 'assets/sprite.png');
   this.load.image('otherPlayer', 'assets/sprite.png');
-  this.load.image('bullet','assets/cannon_ball.png');
+  this.load.image('bullet','assets/laser.png');
 }
 var bullet_array = [];
 
@@ -63,8 +63,8 @@ function create() {
   });
 
   this.socket.on('updateStats', function(data) {
-    document.getElementById("kills").innerHTML = data.kills;
-    document.getElementById("deaths").innerHTML = data.deaths;
+    document.getElementById("kills").innerHTML = "Kills: " + data.kills;
+    document.getElementById("deaths").innerHTML = "Deaths: " + data.deaths;
   });
   
   this.socket.on('disconnect', function(data) {
@@ -93,7 +93,7 @@ function create() {
     // If there's not enough bullets on the client, create them
     for(var i=0;i<server_bullet_array.length;i++) {
       if(bullet_array[i] == undefined){
-        bullet_array[i] = self.physics.add.image(server_bullet_array[i].x,server_bullet_array[i].y,'bullet');
+        bullet_array[i] = self.physics.add.image(server_bullet_array[i].x,server_bullet_array[i].y,'bullet').setOrigin(0.5, 0.5).setDisplaySize(10, 10);;
       }
       else {
         //Otherwise, just update it!
