@@ -186,38 +186,70 @@ server.listen(process.env.PORT || port, function() {
 });
 
 function updateKD(killer, victim,id_killer,id_victim,players) {
-    var kills;
-    var deaths;
+    var kills = 0;
+    var deaths = 0;
 
-    sql = `SELECT * FROM users WHERE username = '${killer}'`;
-    con.query(sql, function (err, result) {
-        if (err) throw err;
-        console.log("1: "+ result[0]);
-        console.log("2: "+ result[0].kills);
-        kills = result[0].kills + 1;
-        deaths = result[0].deaths;
+    var promiseK = new Promise(function(resolve, reject) {
+        sql = `SELECT * FROM users WHERE username = '${killer}'`;
+        con.query(sql, function (err, result) {
+            if (err) throw err;
+            resolve(result[0]);
+        });
+    });
+    promiseK.then(function(data) {
+        kills = data.kills + 1;
+        deaths = data.deaths;
         sql = `UPDATE users SET kills = '${kills}' WHERE username = '${killer}'`;
         con.query(sql, function (err, res) {
             if (err) throw err;
             console.log(`Updated kills of user '${killer}'`);
         });
         io.emit('updateStats_Killer',{kills: kills, deaths: deaths},players,id_killer);
-       // io.emit("updateStats", {kills: kills, deaths: deaths});
     });
-    sql = `SELECT * FROM users WHERE username = '${victim}'`;
-    con.query(sql, function (err, result) {
-        if (err) throw err;
-        kills = result[0].kills;
-        deaths = result[0].deaths + 1;
+
+    var promiseD = new Promise(function(resolve, reject) {
+        sql = `SELECT * FROM users WHERE username = '${victim}'`;
+        con.query(sql, function (err, result) {
+            if (err) throw err;
+            resolve(result[0]);
+        });
+    });
+    promiseD.then(function(data) {
+        kills = data.kills;
+        deaths = data.deaths + 1;
         sql = `UPDATE users SET deaths = '${deaths}' WHERE username = '${victim}'`;
         con.query(sql, function (err, res) {
             if (err) throw err;
             console.log(`Updated deaths of user '${victim}'`);
         });
         io.emit('updateStats_Victim',{kills: kills, deaths: deaths},players,id_victim);
-
-        //io.emit("updateStats", {kills: kills, deaths: deaths});
     });
+
+    // sql = `SELECT * FROM users WHERE username = '${killer}'`;
+    // con.query(sql, function (err, result) {
+    //     if (err) throw err;
+    //     kills = result[0].kills + 1;
+    //     deaths = result[0].deaths;
+    //     sql = `UPDATE users SET kills = '${kills}' WHERE username = '${killer}'`;
+    //     con.query(sql, function (err, res) {
+    //         if (err) throw err;
+    //         console.log(`Updated kills of user '${killer}'`);
+    //     });
+    //     io.emit('updateStats_Killer',{kills: kills, deaths: deaths},players,id_killer);
+    //    // io.emit("updateStats", {kills: kills, deaths: deaths});
+    // });
+    // sql = `SELECT * FROM users WHERE username = '${victim}'`;
+    // con.query(sql, function (err, result) {
+    //     if (err) throw err;
+    //     kills = result[0].kills;
+    //     deaths = result[0].deaths + 1;
+    //     sql = `UPDATE users SET deaths = '${deaths}' WHERE username = '${victim}'`;
+    //     con.query(sql, function (err, res) {
+    //         if (err) throw err;
+    //         console.log(`Updated deaths of user '${victim}'`);
+    //     });
+    //     io.emit('updateStats_Victim',{kills: kills, deaths: deaths},players,id_victim);
+    // });
 }
 
 // Update the bullets 60 times per frame and send updates
