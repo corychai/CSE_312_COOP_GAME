@@ -185,7 +185,7 @@ server.listen(process.env.PORT || port, function() {
     console.log(`App ready...`);
 });
 
-function updateKD(killer, victim) {
+function updateKD(killer, victim,id_killer,id_victim,players) {
     var kills;
     var deaths;
 
@@ -201,7 +201,8 @@ function updateKD(killer, victim) {
             if (err) throw err;
             console.log(`Updated kills of user '${killer}'`);
         });
-        io.emit("updateStats", {kills: kills, deaths: deaths});
+        io.emit('updateStats_Killer',{kills: kills, deaths: deaths},players,id_killer);
+       // io.emit("updateStats", {kills: kills, deaths: deaths});
     });
     sql = `SELECT * FROM users WHERE username = '${victim}'`;
     con.query(sql, function (err, result) {
@@ -213,7 +214,9 @@ function updateKD(killer, victim) {
             if (err) throw err;
             console.log(`Updated deaths of user '${victim}'`);
         });
-        io.emit("updateStats", {kills: kills, deaths: deaths});
+        io.emit('updateStats_Victim',{kills: kills, deaths: deaths},players,id_victim);
+
+        //io.emit("updateStats", {kills: kills, deaths: deaths});
     });
 }
 
@@ -241,10 +244,17 @@ function update() {
                     players[id].y = Math.floor(Math.random() * config.phaser.height);
                     // io.broadcast.emit('playerMoved', players[id]);
                     io.emit('playerMoved', players[id]);
-                    io.emit('currentPlayers', players);
+                    //io.emit('currentPlayers', players);
+                    io.emit('update_players_shot', players,bullet.owner_id);
+
                     // socket.emit('currentPlayers', players);
                     // io.broadcast.emit('newPlayer', players[socket.id]);
-                    updateKD(players[bullet.owner_id].username, players[id].username);
+                   updateKD(players[bullet.owner_id].username, players[id].username,bullet.owner_id,id);
+                  //  io.emit('updateStats_Victim',id);
+                   // io.emit('updateStats_Killer',bullet.owner_id);
+
+                    //updateKD(killer, victim,id_killer,id_victim,players)
+
                 }
             }
         }
