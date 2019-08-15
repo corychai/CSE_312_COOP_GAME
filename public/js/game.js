@@ -22,9 +22,8 @@ var phaser = {
 var game = new Phaser.Game(phaser);
  
 function preload() {
-  this.load.image('ship', 'assets/spaceShips_001.png');
-  this.load.image('otherPlayer', 'assets/enemyBlack5.png');
-  this.load.image('star', 'assets/star_gold.png');
+  this.load.image('ship', 'assets/sprite.png');
+  this.load.image('otherPlayer', 'assets/sprite.png');
   this.load.image('bullet','assets/cannon_ball.png');
 }
 var bullet_array = [];
@@ -62,6 +61,11 @@ function create() {
     addOtherPlayers(self, data[1]);
     document.getElementById("online").innerHTML = stringifyOnline(data[0]);
   });
+
+  this.socket.on('updateStats', function(data) {
+    document.getElementById("kills").innerHTML = data.kills;
+    document.getElementById("deaths").innerHTML = data.deaths;
+  });
   
   this.socket.on('disconnect', function(data) {
     self.otherPlayers.getChildren().forEach(function(otherPlayer) {
@@ -82,14 +86,6 @@ function create() {
         otherPlayer.setPosition(playerInfo.x, playerInfo.y);
       }
     });
-  });
-
-  this.socket.on('starLocation', function(starLocation) {
-    if(self.star) self.star.destroy();
-    self.star = self.physics.add.image(starLocation.x, starLocation.y, 'star');
-    self.physics.add.overlap(self.ship, self.star, function() {
-      this.socket.emit('starCollected');
-    }, null, self);
   });
 
   // Listen for bullet update events
@@ -198,26 +194,16 @@ function update() {
 }
 
 function addPlayer(self, playerInfo) {
-  self.ship = self.physics.add.image(playerInfo.x, playerInfo.y, 'ship').setOrigin(0.5, 0.5).setDisplaySize(53, 40);
-  if (playerInfo.team === 'blue') {
-    self.ship.setTint(0x0000ff);
-  }
-  else {
-    self.ship.setTint(0xff0000);
-  }
+  self.ship = self.physics.add.image(playerInfo.x, playerInfo.y, 'ship').setOrigin(0.5, 0.5).setDisplaySize(40, 40);
+  self.ship.setTint(playerInfo.color);
   self.ship.setDrag(100);
   self.ship.setAngularDrag(100);
   self.ship.setMaxVelocity(200);
 }
 
 function addOtherPlayers(self, playerInfo) {
-  const otherPlayer = self.add.sprite(playerInfo.x, playerInfo.y, 'otherPlayer').setOrigin(0.5, 0.5).setDisplaySize(53, 40);
-  if (playerInfo.team === 'blue') {
-    otherPlayer.setTint(0x0000ff);
-  }
-  else {
-    otherPlayer.setTint(0xff0000);
-  }
+  const otherPlayer = self.add.sprite(playerInfo.x, playerInfo.y, 'otherPlayer').setOrigin(0.5, 0.5).setDisplaySize(40, 40);
+  otherPlayer.setTint(playerInfo.color);
   otherPlayer.playerId = playerInfo.playerId;
   self.otherPlayers.add(otherPlayer);
 }

@@ -45,7 +45,7 @@ con.query(sql, function (err) {
     //TODO: --Test Statement END--
     sql = `CREATE TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        username VARBINARY(255),
+        username VARCHAR(255),
         password VARCHAR(255),
         kills INT,
         deaths INT
@@ -123,35 +123,22 @@ var io = require('socket.io').listen(server);
 var bullet_array = [];
 
 var players = {};
-var star = {
-    x: Math.floor(Math.random() * config.phaser.width) + 50,
-    y: Math.floor(Math.random() * config.phaser.height) + 50
-};
-var scores = {
-    blue: 0,
-    red: 0
-};
 
 io.on('connection', function(socket) {
     console.log('a user connected');
     // create a new player and add it to our players object
     players[socket.id] = {
         rotation: 0,
-        x: Math.floor(Math.random() * config.phaser.width) + 50,
-        y: Math.floor(Math.random() * config.phaser.height) + 50,
+        x: Math.floor(Math.random() * config.phaser.width),
+        y: Math.floor(Math.random() * config.phaser.height),
         playerId: socket.id,
         shot: false,
-        team: (Math.floor(Math.random() * 2) == 0) ? 'red' : 'blue',
+        color: (Math.random() * 0xffffff),
         username: user
     };
     // send the players object to the new player
     socket.emit('currentPlayers', players);
   
-    // send the star object to the new player
-    socket.emit('starLocation', star);
-    // send the current scores
-    socket.emit('scoreUpdate', scores);
-    // update all other players of the new player
     socket.broadcast.emit('newPlayer', [players, players[socket.id]]);
   
     // when a player disconnects, remove them from our players object
@@ -189,18 +176,6 @@ io.on('connection', function(socket) {
         // emit a message to all players about the player that moved
         socket.broadcast.emit('playerMoved', players[socket.id]);
     });
-    socket.on('starCollected', function() {
-        if (players[socket.id].team === 'red') {
-            scores.red += 10;
-        }
-        else {
-            scores.blue += 10;
-        }
-        star.x = Math.floor(Math.random() * config.phaser.width) + 50;
-        star.y = Math.floor(Math.random() * config.phaser.height) + 50;
-        io.emit('starLocation', star);
-        io.emit('scoreUpdate', scores);
-    });
 });
 
 app.use(function(req, res, next) {
@@ -209,6 +184,38 @@ app.use(function(req, res, next) {
 server.listen(process.env.PORT || port, function() {
     console.log(`App ready...`);
 });
+
+function updateKD(killer, victim) {
+    var kills;
+    var deaths;
+
+    sql = `SELECT * FROM users WHERE username = '${killer}'`;
+    con.query(sql, function (err, result) {
+        if (err) throw err;
+        console.log("1: "+ result[0]);
+        console.log("2: "+ result[0].kills);
+        kills = result[0].kills + 1;
+        deaths = result[0].deaths;
+        sql = `UPDATE users SET kills = '${kills}' WHERE username = '${killer}'`;
+        con.query(sql, function (err, res) {
+            if (err) throw err;
+            console.log(`Updated kills of user '${killer}'`);
+        });
+        io.emit("updateStats", {kills: kills, deaths: deaths});
+    });
+    sql = `SELECT * FROM users WHERE username = '${victim}'`;
+    con.query(sql, function (err, result) {
+        if (err) throw err;
+        kills = result[0].kills;
+        deaths = result[0].deaths + 1;
+        sql = `UPDATE users SET deaths = '${deaths}' WHERE username = '${victim}'`;
+        con.query(sql, function (err, res) {
+            if (err) throw err;
+            console.log(`Updated deaths of user '${victim}'`);
+        });
+        io.emit("updateStats", {kills: kills, deaths: deaths});
+    });
+}
 
 // Update the bullets 60 times per frame and send updates
 function update() {
@@ -230,14 +237,14 @@ function update() {
                     // y: Math.floor(Math.random() * 500) + 50,
                     // io.emit('disconnect',id);
                     io.emit('player-hit',id); // Tell everyone this player got hit
-                    players[id].x =  Math.floor(Math.random() * config.phaser.width) + 50;
-                    players[id].y = Math.floor(Math.random() * config.phaser.height) + 50;
+                    players[id].x =  Math.floor(Math.random() * config.phaser.width);
+                    players[id].y = Math.floor(Math.random() * config.phaser.height);
                     // io.broadcast.emit('playerMoved', players[id]);
                     io.emit('playerMoved', players[id]);
                     io.emit('currentPlayers', players);
                     // socket.emit('currentPlayers', players);
                     // io.broadcast.emit('newPlayer', players[socket.id]);
-                    console.log('player team is: ' + players[id].team)
+                    updateKD(players[bullet.owner_id].username, players[id].username);
                 }
             }
         }
