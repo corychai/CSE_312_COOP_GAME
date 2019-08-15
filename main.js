@@ -120,6 +120,7 @@ const server = require('http').Server(app);
 var io = require('socket.io').listen(server);
 var bullet_array = [];
 
+
 var players = {};
 var star = {
   x: Math.floor(Math.random() * 700) + 50,
@@ -138,8 +139,10 @@ io.on('connection', function(socket) {
       x: Math.floor(Math.random() * 700) + 50,
       y: Math.floor(Math.random() * 500) + 50,
       playerId: socket.id,
+
         shot:false,
       team: (Math.floor(Math.random() * 2) == 0) ? 'red' : 'blue'
+
 
     };
     // send the players object to the new player
@@ -160,6 +163,7 @@ io.on('connection', function(socket) {
       // emit a message to all players to remove this player
       io.emit('disconnect', socket.id);
     });
+
 
     // Listen in on bullets being shot
     socket.on('bullet-shot',function(bullet_state){
@@ -188,6 +192,8 @@ io.on('connection', function(socket) {
         // emit a message to all players about the player that moved
         socket.broadcast.emit('playerMoved', players[socket.id]);
     });
+
+
 
 
     socket.on('starCollected', function() {
