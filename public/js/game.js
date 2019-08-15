@@ -116,7 +116,9 @@ function create() {
       //If this is you
       self.ship.alpha = 0;
       self.ship.destroy();
-      // self.socket.emit('playerMovement', { x: self.ship.x, y: self.ship.y, rotation: self.ship.rotation });
+      addPlayer(self,id);
+      self.ship.alpha = 0;
+        // self.socket.emit('playerMovement', { x: self.ship.x, y: self.ship.y, rotation: self.ship.rotation });
     }
     else {
       // Find the right player
@@ -135,6 +137,8 @@ function create() {
       if(players[id].playerId === self.socket.id) {
         if(self.socket.id === victim_id) {
           addPlayer(self, players[victim_id]);
+          self.socket.alpha = 0;
+
         }
       }
       else {
