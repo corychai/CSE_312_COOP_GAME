@@ -276,17 +276,12 @@ function update() {
                     players[id].y = Math.floor(Math.random() * config.phaser.height);
                     // io.broadcast.emit('playerMoved', players[id]);
                     io.emit('playerMoved', players[id]);
-                    //io.emit('currentPlayers', players);
-                    io.emit('update_players_shot', players,bullet.owner_id);
+                    // io.emit('currentPlayers', players);
+                    // io.emit('update_players_shot', players,bullet.owner_id);
 
                     // socket.emit('currentPlayers', players);
                     // io.broadcast.emit('newPlayer', players[socket.id]);
-                   updateKD(players[bullet.owner_id].username, players[id].username,bullet.owner_id,id);
-                  //  io.emit('updateStats_Victim',id);
-                   // io.emit('updateStats_Killer',bullet.owner_id);
-
-                    //updateKD(killer, victim,id_killer,id_victim,players)
-
+                    updateKD(players[bullet.owner_id].username, players[id].username,bullet.owner_id,id);
                 }
             }
         }

@@ -129,52 +129,18 @@ function create() {
     }
   });
 
-
-
-  this.socket.on('update_players_shot', function(players,bullet_id) {
-    Object.keys(players).forEach(function(id) {
-      if(players[id].playerId === self.socket.id) {
-        if(self.socket.id !== bullet_id) {
-          addPlayer(self, players[id]);
-          document.getElementById("online").innerHTML = stringifyOnline(players);
-        }
-      }
-      else {
-        addOtherPlayers(self, players[id]);
-        document.getElementById("online").innerHTML = stringifyOnline(players);
-      }
-    });
+  this.socket.on('updateStats_Victim', function(data,players,victim_id) {
+    if (victim_id === self.socket.id) {
+        document.getElementById("kills").innerHTML = "Kills: " + data.kills;
+        document.getElementById("deaths").innerHTML ="Deaths: "+ data.deaths;
+    }
   });
-
-
-
-    this.socket.on('updateStats_Victim', function(data,players,victim_id) {
-
-
-
-
-
-            if (victim_id === self.socket.id) {
-                document.getElementById("kills").innerHTML = "Kills: " + data.kills ;
-                document.getElementById("deaths").innerHTML ="Deaths: "+ data.deaths ;
-
-            }
-
-
-    });
-
-    this.socket.on('updateStats_Killer', function(data,players,killer_id) {
-
-
-
-            if ( killer_id=== self.socket.id) {
-                document.getElementById("kills").innerHTML = "Kills: " + data.kills ;
-                document.getElementById("deaths").innerHTML ="Deaths: "+ data.deaths ;
-
-
-            }
-
-    });
+  this.socket.on('updateStats_Killer', function(data,players,killer_id) {
+    if ( killer_id=== self.socket.id) {
+        document.getElementById("kills").innerHTML = "Kills: " + data.kills;
+        document.getElementById("deaths").innerHTML ="Deaths: "+ data.deaths;
+    }
+  });
 }
  
 function update() {
