@@ -129,6 +129,19 @@ function create() {
     }
   });
 
+  this.socket.on('update_players_shot', function(players,bullet_id) {
+    Object.keys(players).forEach(function(id) {
+      if(players[id].playerId === self.socket.id) {
+        if(self.socket.id !== bullet_id) {
+          addPlayer(self, players[id]);
+        }
+      }
+      else {
+        addOtherPlayers(self, players[id]);
+      }
+    });
+  });
+
   this.socket.on('updateStats_Victim', function(data,players,victim_id) {
     if (victim_id === self.socket.id) {
         document.getElementById("kills").innerHTML = "Kills: " + data.kills;
